@@ -1,0 +1,777 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>알고리즘 문제 유형 가이드</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --surface: #ffffff;
+      --surface-soft: #eef4ff;
+      --text: #172033;
+      --muted: #69758b;
+      --line: #dce4f0;
+      --primary: #2f65d5;
+      --primary-dark: #24499b;
+      --green: #159a7d;
+      --orange: #e98b22;
+      --shadow: 0 14px 34px rgba(33, 51, 84, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Pretendard, "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.68;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(220, 228, 240, 0.9);
+      background: rgba(246, 248, 251, 0.94);
+      backdrop-filter: blur(14px);
+    }
+
+    .topbar-inner {
+      width: min(1180px, calc(100% - 28px));
+      min-height: 68px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary), #20aa8c);
+      box-shadow: 0 8px 20px rgba(47, 101, 213, 0.24);
+    }
+
+    .layout {
+      width: min(1180px, calc(100% - 28px));
+      margin: 24px auto 70px;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 28px;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 92px;
+      align-self: start;
+      max-height: calc(100vh - 112px);
+      overflow-y: auto;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: var(--shadow);
+    }
+
+    .menu-title {
+      padding: 8px 10px 12px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-list { display: grid; gap: 6px; }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 42px;
+      padding: 9px 11px;
+      border-radius: 10px;
+      color: #49566d;
+      font-size: 0.94rem;
+      font-weight: 750;
+    }
+
+    .nav-link:hover {
+      color: var(--primary-dark);
+      background: var(--surface-soft);
+    }
+
+    .nav-number {
+      width: 26px;
+      height: 26px;
+      flex: 0 0 26px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: var(--primary);
+      background: #e5edff;
+      font-size: 0.76rem;
+      font-weight: 900;
+    }
+
+    main { min-width: 0; }
+
+    .hero {
+      padding: 42px;
+      border-radius: 24px;
+      color: white;
+      background: linear-gradient(130deg, #183362, #2f65d5 62%, #159a7d);
+      box-shadow: 0 20px 45px rgba(37, 74, 154, 0.2);
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: #d9e7ff;
+      font-size: 0.9rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      line-height: 1.18;
+    }
+
+    .hero p {
+      max-width: 780px;
+      margin: 16px 0 0;
+      color: #eef5ff;
+      font-size: 1.05rem;
+    }
+
+    section {
+      scroll-margin-top: 90px;
+      margin-top: 34px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 14px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: clamp(1.55rem, 3vw, 2rem);
+    }
+
+    .section-heading p {
+      margin: 5px 0 0;
+      color: var(--muted);
+    }
+
+    .intro-grid,
+    .study-grid,
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .intro-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .card,
+    .type-card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .card h3,
+    .type-card h3 {
+      margin: 0 0 8px;
+      font-size: 1.16rem;
+    }
+
+    .card p,
+    .type-card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .type-card p { margin-bottom: 13px; }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .tag,
+    .level-tag {
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .tag {
+      color: var(--primary-dark);
+      background: #eaf0ff;
+    }
+
+    .level-tag {
+      color: #0c5f50;
+      background: #ddf8ef;
+    }
+
+    .type-card ul,
+    .study-card ol,
+    .study-card ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .type-card li,
+    .study-card li { margin: 7px 0; }
+
+    .study-card {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .study-card h3 {
+      margin: 0 0 10px;
+      color: var(--primary-dark);
+    }
+
+    .note {
+      margin-top: 14px;
+      padding: 13px 15px;
+      border-left: 4px solid var(--orange);
+      border-radius: 8px;
+      background: #fff7ed;
+      color: #72502b;
+      font-weight: 700;
+    }
+
+
+    .problem-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--line);
+    }
+
+    .problem-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 11px;
+      border: 1px solid #cfe0ff;
+      border-radius: 999px;
+      color: var(--primary-dark);
+      background: #f5f8ff;
+      font-size: 0.88rem;
+      font-weight: 800;
+    }
+
+    .problem-link:hover {
+      color: #fff;
+      border-color: var(--primary);
+      background: var(--primary);
+    }
+    .source-box {
+      padding: 20px;
+      border: 1px solid #cfe0ff;
+      border-radius: var(--radius);
+      background: #f0f5ff;
+    }
+
+    .source-box p { margin: 0; color: var(--muted); }
+    .source-box a { color: var(--primary-dark); font-weight: 850; text-decoration: underline; }
+
+    .footer {
+      margin-top: 42px;
+      padding: 22px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; max-height: none; }
+      .hero { padding: 30px 24px; }
+      .intro-grid,
+      .study-grid,
+      .type-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#top">
+        <span class="brand-mark">A</span>
+        <span>Algorithm Type Guide</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="menu-title">GUIDE MENU</div>
+      <nav class="nav-list">
+        <a class="nav-link" href="#why"><span class="nav-number">01</span>왜 어려운가</a>
+        <a class="nav-link" href="#study-order"><span class="nav-number">02</span>공부 순서</a>
+        <a class="nav-link" href="#basic-types"><span class="nav-number">03</span>기본 유형</a>
+        <a class="nav-link" href="#programmers"><span class="nav-number">04</span>프로그래머스 유형</a>
+        <a class="nav-link" href="#how-to-read"><span class="nav-number">05</span>문제 읽는 법</a>
+        <a class="nav-link" href="#next"><span class="nav-number">06</span>다음 방향</a>
+      </nav>
+    </aside>
+
+    <main id="top">
+      <section class="hero">
+        <p class="eyebrow">SSAFY · 알고리즘 입문자용</p>
+        <h1>알고리즘 문제 유형 가이드</h1>
+        <p>
+          알고리즘이 어려운 이유는 머리가 나빠서가 아니라, 어떤 유형을 공부해야 하는지와 문제에서 무엇을 봐야 하는지가 처음에는 잘 보이지 않기 때문이다.
+          이 문서는 프로그래머스 고득점 Kit 유형을 기준으로, 코딩테스트에서 자주 만나는 문제 유형을 설명 위주로 정리한다.
+        </p>
+      </section>
+
+      <section id="why">
+        <div class="section-heading">
+          <div>
+            <h2>왜 알고리즘이 어렵게 느껴질까</h2>
+            <p>많은 사람이 막히는 지점은 문법보다 문제를 유형으로 분류하는 과정이다.</p>
+          </div>
+        </div>
+        <div class="intro-grid">
+          <article class="card">
+            <h3>문제 지문이 길다</h3>
+            <p>입력, 조건, 예외 상황이 섞여 있어서 무엇을 저장하고 무엇을 계산해야 하는지 분리하기 어렵다.</p>
+          </article>
+          <article class="card">
+            <h3>유형 판단이 어렵다</h3>
+            <p>배열로 풀 문제인지, Map이 필요한지, BFS인지 DP인지 판단하는 기준이 아직 익숙하지 않다.</p>
+          </article>
+          <article class="card">
+            <h3>시간복잡도가 낯설다</h3>
+            <p>모든 경우를 봐도 되는지, 정렬이나 이분탐색으로 줄여야 하는지 문제 크기에서 판단해야 한다.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="study-order">
+        <div class="section-heading">
+          <div>
+            <h2>처음 공부할 순서</h2>
+            <p>프로그래머스 유형을 풀기 전에 구현 기초를 먼저 잡고, 이후 자료구조와 탐색으로 넘어간다.</p>
+          </div>
+        </div>
+        <div class="study-grid">
+          <article class="study-card">
+            <h3>1. 구현 기초</h3>
+            <ol>
+              <li>입력값을 변수, 배열, 2차원 배열에 정확히 저장한다.</li>
+              <li>반복문으로 배열을 순회하고 인덱스 범위를 실수하지 않는다.</li>
+              <li>문제의 조건을 순서대로 코드 흐름으로 옮긴다.</li>
+              <li>상하좌우 이동, 8방향 탐색, 문자열 처리처럼 자주 나오는 구현 패턴을 익힌다.</li>
+            </ol>
+          </article>
+          <article class="study-card">
+            <h3>2. 자료구조</h3>
+            <ol>
+              <li>값을 빠르게 찾을 때는 HashMap과 HashSet을 떠올린다.</li>
+              <li>최근 값부터 처리하면 Stack, 먼저 들어온 값부터 처리하면 Queue를 떠올린다.</li>
+              <li>가장 작은 값이나 큰 값을 계속 꺼내야 하면 PriorityQueue를 떠올린다.</li>
+              <li>문제에서 요구하는 처리 순서가 자료구조 선택의 기준이 된다.</li>
+            </ol>
+          </article>
+          <article class="study-card">
+            <h3>3. 탐색과 완전탐색</h3>
+            <ol>
+              <li>가능한 경우가 적으면 완전탐색으로 모든 후보를 확인한다.</li>
+              <li>연결된 영역이나 경로를 찾으면 DFS 또는 BFS를 생각한다.</li>
+              <li>최단 거리나 최소 이동 횟수는 BFS가 자주 쓰인다.</li>
+              <li>재귀를 쓸 때는 종료 조건과 중복 방문 방지가 핵심이다.</li>
+            </ol>
+          </article>
+          <article class="study-card">
+            <h3>4. 최적화 유형</h3>
+            <ol>
+              <li>정렬하면 선택 기준이 단순해지는지 확인한다.</li>
+              <li>정답 후보가 숫자 범위라면 이분탐색을 생각한다.</li>
+              <li>현재 최선의 선택이 전체 최선으로 이어지면 탐욕법을 생각한다.</li>
+              <li>같은 계산이 반복되면 동적계획법을 생각한다.</li>
+            </ol>
+          </article>
+        </div>
+      </section>
+
+
+      <section id="basic-types">
+        <div class="section-heading">
+          <div>
+            <h2>기본 문제 유형</h2>
+            <p>프로그래머스 고득점 Kit로 넘어가기 전에 먼저 익숙해져야 하는 입문 유형이다. 각 카드의 문제 버튼은 프로그래머스 입문/Level 1 문제로 연결된다.</p>
+          </div>
+        </div>
+
+        <div class="type-grid">
+          <article class="type-card">
+            <h3>입출력·사칙연산</h3>
+            <div class="tag-row"><span class="level-tag">가장 먼저</span><span class="tag">Scanner</span><span class="tag">출력 형식</span></div>
+            <p>문제에서 주어진 값을 정확히 읽고, 요구한 형식 그대로 출력하는 유형이다.</p>
+            <ul>
+              <li>정수, 실수, 문자열을 입력받아 계산하는 문제</li>
+              <li>몫, 나머지, 평균, 합계처럼 기본 연산을 사용하는 문제</li>
+              <li>출력 문구, 공백, 줄바꿈을 정확히 맞춰야 하는 문제</li>
+              <li>자료형 범위를 고려해야 하는 문제</li>
+            </ul>
+            <div class="problem-links"><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120802" target="_blank" rel="noreferrer">두 수의 합</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120803" target="_blank" rel="noreferrer">두 수의 차</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120804" target="_blank" rel="noreferrer">두 수의 곱</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120805" target="_blank" rel="noreferrer">몫 구하기</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120810" target="_blank" rel="noreferrer">나머지 구하기</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120806" target="_blank" rel="noreferrer">두 수의 나눗셈</a></div>
+          </article>
+
+          <article class="type-card">
+            <h3>조건문</h3>
+            <div class="tag-row"><span class="tag">if</span><span class="tag">else if</span><span class="tag">분기</span></div>
+            <p>조건에 따라 서로 다른 결과를 내야 하는 유형이다.</p>
+            <ul>
+              <li>점수, 등급, 상태에 따라 결과가 달라지는 문제</li>
+              <li>여러 조건 중 우선순위가 있는 문제</li>
+              <li>경계값을 정확히 포함하거나 제외해야 하는 문제</li>
+              <li>조건을 잘못 배치하면 일부 케이스가 틀리는 문제</li>
+            </ul>
+            <div class="problem-links"><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120807" target="_blank" rel="noreferrer">숫자 비교하기</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120829" target="_blank" rel="noreferrer">각도기</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120830" target="_blank" rel="noreferrer">양꼬치</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/12937" target="_blank" rel="noreferrer">짝수와 홀수</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/181934" target="_blank" rel="noreferrer">조건 문자열</a></div>
+          </article>
+
+          <article class="type-card">
+            <h3>반복문</h3>
+            <div class="tag-row"><span class="tag">for</span><span class="tag">while</span><span class="tag">누적</span></div>
+            <p>같은 작업을 여러 번 반복하면서 합계, 개수, 최댓값을 구하는 유형이다.</p>
+            <ul>
+              <li>1부터 N까지 반복하며 값을 누적하는 문제</li>
+              <li>조건을 만족하는 값의 개수를 세는 문제</li>
+              <li>반복 중 최댓값이나 최솟값을 갱신하는 문제</li>
+              <li>반복 종료 조건을 직접 판단해야 하는 문제</li>
+            </ul>
+            <div class="problem-links"><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120831" target="_blank" rel="noreferrer">짝수의 합</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120817" target="_blank" rel="noreferrer">배열의 평균값</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120583" target="_blank" rel="noreferrer">중복된 숫자 개수</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120585" target="_blank" rel="noreferrer">머쓱이보다 키 큰 사람</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120836" target="_blank" rel="noreferrer">순서쌍의 개수</a></div>
+          </article>
+
+          <article class="type-card">
+            <h3>1차원 배열</h3>
+            <div class="tag-row"><span class="level-tag">필수</span><span class="tag">index</span><span class="tag">탐색</span></div>
+            <p>여러 값을 순서대로 저장하고 인덱스로 접근하는 유형이다.</p>
+            <ul>
+              <li>배열 전체를 순회하며 합계, 평균, 최댓값을 구하는 문제</li>
+              <li>특정 값의 위치나 등장 횟수를 찾는 문제</li>
+              <li>배열을 뒤집거나 일부 구간을 바꾸는 문제</li>
+              <li>이전 값과 현재 값을 비교하는 문제</li>
+            </ul>
+            <div class="problem-links"><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120809" target="_blank" rel="noreferrer">배열 두 배 만들기</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120811" target="_blank" rel="noreferrer">중앙값 구하기</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120847" target="_blank" rel="noreferrer">최댓값 만들기(1)</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120824" target="_blank" rel="noreferrer">짝수 홀수 개수</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120833" target="_blank" rel="noreferrer">배열 자르기</a></div>
+          </article>
+
+          <article class="type-card">
+            <h3>문자열</h3>
+            <div class="tag-row"><span class="tag">charAt</span><span class="tag">substring</span><span class="tag">StringBuilder</span></div>
+            <p>문자를 하나씩 확인하거나 문자열을 자르고 합치는 유형이다.</p>
+            <ul>
+              <li>특정 문자의 개수를 세는 문제</li>
+              <li>문자열을 뒤집거나 회문인지 확인하는 문제</li>
+              <li>문자열 일부를 잘라 비교하는 문제</li>
+              <li>여러 문자열을 효율적으로 이어 붙이는 문제</li>
+            </ul>
+            <div class="problem-links"><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120822" target="_blank" rel="noreferrer">문자열 뒤집기</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120826" target="_blank" rel="noreferrer">특정 문자 제거하기</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120825" target="_blank" rel="noreferrer">문자 반복 출력하기</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120854" target="_blank" rel="noreferrer">배열 원소의 길이</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120908" target="_blank" rel="noreferrer">문자열안에 문자열</a></div>
+          </article>
+
+          <article class="type-card">
+            <h3>2차원 배열</h3>
+            <div class="tag-row"><span class="level-tag">구현 핵심</span><span class="tag">행·열</span><span class="tag">좌표</span></div>
+            <p>격자, 지도, 보드처럼 행과 열로 이루어진 데이터를 다루는 유형이다.</p>
+            <ul>
+              <li>모든 칸을 순회하며 조건을 확인하는 문제</li>
+              <li>상하좌우 또는 8방향 주변 칸을 확인하는 문제</li>
+              <li>범위 밖으로 나가지 않도록 인덱스를 검사하는 문제</li>
+              <li>테두리 padding을 활용해 예외 처리를 줄이는 문제</li>
+            </ul>
+            <div class="problem-links"><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120861" target="_blank" rel="noreferrer">캐릭터의 좌표</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120860" target="_blank" rel="noreferrer">직사각형 넓이 구하기</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120866" target="_blank" rel="noreferrer">안전지대</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120875" target="_blank" rel="noreferrer">평행</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120876" target="_blank" rel="noreferrer">겹치는 선분의 길이</a></div>
+          </article>
+
+          <article class="type-card">
+            <h3>시뮬레이션</h3>
+            <div class="tag-row"><span class="tag">명령 처리</span><span class="tag">상태 변화</span><span class="tag">구현</span></div>
+            <p>문제에 적힌 규칙을 그대로 따라가며 상태를 바꾸는 유형이다.</p>
+            <ul>
+              <li>U, D, L, R 같은 명령에 따라 위치를 이동하는 문제</li>
+              <li>시간이 흐르면서 값이나 상태가 변하는 문제</li>
+              <li>조건에 따라 이동, 제거, 추가, 점수 계산이 일어나는 문제</li>
+              <li>문제 지문을 빠뜨리지 않고 코드 순서로 옮겨야 하는 문제</li>
+            </ul>
+            <div class="problem-links"><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120861" target="_blank" rel="noreferrer">캐릭터의 좌표</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120883" target="_blank" rel="noreferrer">로그인 성공?</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120907" target="_blank" rel="noreferrer">OX퀴즈</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120956" target="_blank" rel="noreferrer">옹알이 (1)</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120863" target="_blank" rel="noreferrer">다항식 더하기</a></div>
+          </article>
+
+          <article class="type-card">
+            <h3>기초 수학</h3>
+            <div class="tag-row"><span class="tag">약수</span><span class="tag">배수</span><span class="tag">나머지</span></div>
+            <p>복잡한 알고리즘보다 숫자의 규칙을 이용해 답을 구하는 유형이다.</p>
+            <ul>
+              <li>약수, 배수, 소수 여부를 판단하는 문제</li>
+              <li>나머지 연산으로 반복되는 패턴을 찾는 문제</li>
+              <li>최대공약수와 최소공배수를 구하는 문제</li>
+              <li>단순 계산을 규칙으로 줄여야 하는 문제</li>
+            </ul>
+            <div class="problem-links"><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120897" target="_blank" rel="noreferrer">약수 구하기</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120852" target="_blank" rel="noreferrer">소인수분해</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/12940" target="_blank" rel="noreferrer">최대공약수와 최소공배수</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/12921" target="_blank" rel="noreferrer">소수 찾기</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/120815" target="_blank" rel="noreferrer">피자 나눠 먹기 (2)</a></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="programmers">
+        <div class="section-heading">
+          <div>
+            <h2>프로그래머스 문제 유형</h2>
+            <p>코딩테스트 고득점 Kit에 있는 대표 유형을 기준으로 정리했다. 각 유형 설명 아래의 문제 버튼을 누르면 프로그래머스 문제 페이지로 바로 이동한다.</p>
+          </div>
+        </div>
+
+        <div class="type-grid">
+          <article class="type-card">
+            <h3>해시</h3>
+            <div class="tag-row"><span class="level-tag">출제 빈도 높음</span><span class="tag">Key-Value</span><span class="tag">빈도수</span><span class="tag">중복 확인</span></div>
+            <p>값을 빠르게 찾거나, 어떤 값이 몇 번 등장했는지 관리해야 하는 유형이다.</p>
+            <ul>
+              <li>두 목록을 비교해서 빠진 값이나 겹치는 값을 찾는 문제</li>
+              <li>이름, 번호, 문자열 같은 값을 key로 저장하고 빠르게 찾는 문제</li>
+              <li>같은 값이 몇 번 등장했는지 세는 문제</li>
+              <li>문자열이나 객체를 조건에 따라 그룹으로 묶는 문제</li>
+              <li>배열로 매번 검색하면 느려지는 포함 여부 확인 문제</li>
+            </ul>
+            <div class="problem-links"><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/1845" target="_blank" rel="noreferrer">폰켓몬</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42576" target="_blank" rel="noreferrer">완주하지 못한 선수</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42577" target="_blank" rel="noreferrer">전화번호 목록</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42578" target="_blank" rel="noreferrer">의상</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42579" target="_blank" rel="noreferrer">베스트앨범</a></div>
+          </article>
+
+          <article class="type-card">
+            <h3>스택·큐</h3>
+            <div class="tag-row"><span class="tag">LIFO</span><span class="tag">FIFO</span><span class="tag">순서 처리</span></div>
+            <p>데이터가 들어오고 나가는 순서가 정답에 직접 영향을 주는 유형이다.</p>
+            <ul>
+              <li>가장 최근에 들어온 값을 먼저 처리해야 하는 문제</li>
+              <li>먼저 들어온 작업을 먼저 처리해야 하는 문제</li>
+              <li>괄호, 짝 맞추기, 이전 상태 되돌리기처럼 최근 상태를 확인하는 문제</li>
+              <li>작업 대기열, 기능 배포, 프린터 순서처럼 순서대로 처리하는 문제</li>
+              <li>현재 값과 이전 값을 비교하면서 제거하거나 유지하는 문제</li>
+            </ul>
+            <div class="problem-links"><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/12906" target="_blank" rel="noreferrer">같은 숫자는 싫어</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42586" target="_blank" rel="noreferrer">기능개발</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/12909" target="_blank" rel="noreferrer">올바른 괄호</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42587" target="_blank" rel="noreferrer">프로세스</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42583" target="_blank" rel="noreferrer">다리를 지나는 트럭</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42584" target="_blank" rel="noreferrer">주식가격</a></div>
+          </article>
+
+          <article class="type-card">
+            <h3>힙</h3>
+            <div class="tag-row"><span class="tag">PriorityQueue</span><span class="tag">최솟값</span><span class="tag">최댓값</span></div>
+            <p>가장 작거나 큰 값을 계속 꺼내야 할 때 쓰는 우선순위 처리 유형이다.</p>
+            <ul>
+              <li>매번 가장 작은 값이나 가장 큰 값을 골라야 하는 문제</li>
+              <li>값을 섞거나 합치면서 기준치를 넘겨야 하는 문제</li>
+              <li>작업 시간, 대기 시간, 우선순위 기준으로 처리 순서를 정하는 문제</li>
+              <li>정렬을 매번 다시 하면 느려지는 문제</li>
+              <li>상위 K개 또는 하위 K개 값을 유지해야 하는 문제</li>
+            </ul>
+            <div class="problem-links"><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42626" target="_blank" rel="noreferrer">더 맵게</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42627" target="_blank" rel="noreferrer">디스크 컨트롤러</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42628" target="_blank" rel="noreferrer">이중우선순위큐</a></div>
+          </article>
+
+          <article class="type-card">
+            <h3>정렬</h3>
+            <div class="tag-row"><span class="level-tag">출제 빈도 높음</span><span class="tag">기준 정렬</span><span class="tag">Comparator</span></div>
+            <p>데이터의 순서를 바꾸면 비교나 선택이 쉬워지는 유형이다.</p>
+            <ul>
+              <li>숫자, 문자열, 객체를 특정 기준으로 정렬하는 문제</li>
+              <li>여러 기준을 순서대로 적용해야 하는 문제</li>
+              <li>정렬 후 앞이나 뒤에서부터 선택하면 답이 나오는 문제</li>
+              <li>인접한 값끼리 비교해서 조건을 확인하는 문제</li>
+              <li>문제 조건을 정렬 기준으로 바꿔야 하는 문제</li>
+            </ul>
+            <div class="problem-links"><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42748" target="_blank" rel="noreferrer">K번째수</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42746" target="_blank" rel="noreferrer">가장 큰 수</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42747" target="_blank" rel="noreferrer">H-Index</a></div>
+          </article>
+
+          <article class="type-card">
+            <h3>완전탐색</h3>
+            <div class="tag-row"><span class="level-tag">출제 빈도 높음</span><span class="tag">모든 경우</span><span class="tag">순열</span><span class="tag">조합</span></div>
+            <p>가능한 경우를 전부 확인해도 시간 안에 풀 수 있는지 판단하는 유형이다.</p>
+            <ul>
+              <li>모든 숫자 조합이나 문자열 조합을 만들어 확인하는 문제</li>
+              <li>선택 가능한 후보가 많지 않아 전부 검사할 수 있는 문제</li>
+              <li>최소값이나 최대값을 모든 후보 중에서 고르는 문제</li>
+              <li>조건을 만족하는 후보를 직접 생성해야 하는 문제</li>
+              <li>재귀, 중첩 반복문, 방문 배열을 활용하는 문제</li>
+            </ul>
+            <div class="problem-links"><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/86491" target="_blank" rel="noreferrer">최소직사각형</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42840" target="_blank" rel="noreferrer">모의고사</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42839" target="_blank" rel="noreferrer">소수 찾기</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42842" target="_blank" rel="noreferrer">카펫</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/87946" target="_blank" rel="noreferrer">피로도</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/86971" target="_blank" rel="noreferrer">전력망을 둘로 나누기</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/84512" target="_blank" rel="noreferrer">모음사전</a></div>
+          </article>
+
+          <article class="type-card">
+            <h3>탐욕법</h3>
+            <div class="tag-row"><span class="tag">Greedy</span><span class="tag">선택 기준</span><span class="tag">정렬 활용</span></div>
+            <p>현재 가장 좋아 보이는 선택을 반복해도 전체 정답이 되는지 판단하는 유형이다.</p>
+            <ul>
+              <li>가장 작은 값, 가장 큰 값, 가장 빠른 값부터 선택하는 문제</li>
+              <li>정렬한 뒤 앞에서부터 선택하면 최적해가 되는 문제</li>
+              <li>한 번 선택한 결과를 다시 바꾸지 않는 문제</li>
+              <li>최소 비용, 최대 개수, 최소 이동 횟수를 구하는 문제</li>
+              <li>선택 기준이 항상 맞는지 반례를 생각해야 하는 문제</li>
+            </ul>
+            <div class="problem-links"><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42862" target="_blank" rel="noreferrer">체육복</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42860" target="_blank" rel="noreferrer">조이스틱</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42883" target="_blank" rel="noreferrer">큰 수 만들기</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42885" target="_blank" rel="noreferrer">구명보트</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42861" target="_blank" rel="noreferrer">섬 연결하기</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42884" target="_blank" rel="noreferrer">단속카메라</a></div>
+          </article>
+
+          <article class="type-card">
+            <h3>동적계획법</h3>
+            <div class="tag-row"><span class="tag">Dynamic Programming</span><span class="tag">상태 정의</span><span class="tag">점화식</span></div>
+            <p>같은 계산이 반복되고, 이전 결과를 저장해야 효율적으로 풀리는 유형이다.</p>
+            <ul>
+              <li>이전 위치나 이전 선택의 결과가 현재 답에 영향을 주는 문제</li>
+              <li>최댓값, 최솟값, 경우의 수를 누적해서 구하는 문제</li>
+              <li>제한 조건 안에서 가장 좋은 선택을 찾아야 하는 문제</li>
+              <li>완전탐색으로 풀면 같은 상태를 반복해서 계산하는 문제</li>
+              <li>dp 배열의 의미, 초기값, 점화식, 반복 방향을 정해야 하는 문제</li>
+            </ul>
+            <div class="problem-links"><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42895" target="_blank" rel="noreferrer">N으로 표현</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/43105" target="_blank" rel="noreferrer">정수 삼각형</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42898" target="_blank" rel="noreferrer">등굣길</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/1843" target="_blank" rel="noreferrer">사칙연산</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/42897" target="_blank" rel="noreferrer">도둑질</a></div>
+          </article>
+
+          <article class="type-card">
+            <h3>DFS·BFS</h3>
+            <div class="tag-row"><span class="level-tag">출제 빈도 높음</span><span class="tag">깊이 우선 탐색</span><span class="tag">너비 우선 탐색</span><span class="tag">visited</span></div>
+            <p>연결된 구조를 탐색하거나 최단 이동 횟수를 구해야 하는 유형이다.</p>
+            <ul>
+              <li>연결된 영역의 개수나 크기를 구하는 문제</li>
+              <li>시작점에서 도착점까지 갈 수 있는지 확인하는 문제</li>
+              <li>모든 경로를 확인하거나 조건에 맞는 경로를 찾는 문제</li>
+              <li>가중치가 없는 상황에서 최단 거리를 구하는 문제</li>
+              <li>여러 시작점에서 동시에 퍼지는 문제</li>
+            </ul>
+            <div class="problem-links"><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/43165" target="_blank" rel="noreferrer">타겟 넘버</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/43162" target="_blank" rel="noreferrer">네트워크</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/1844" target="_blank" rel="noreferrer">게임 맵 최단거리</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/43163" target="_blank" rel="noreferrer">단어 변환</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/87694" target="_blank" rel="noreferrer">아이템 줍기</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/43164" target="_blank" rel="noreferrer">여행경로</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/84021" target="_blank" rel="noreferrer">퍼즐 조각 채우기</a></div>
+          </article>
+
+          <article class="type-card">
+            <h3>이분탐색</h3>
+            <div class="tag-row"><span class="tag">Binary Search</span><span class="tag">Parametric Search</span><span class="tag">범위 축소</span></div>
+            <p>정답 후보 범위를 반씩 줄이면서 가능한 값을 찾는 유형이다.</p>
+            <ul>
+              <li>정렬된 데이터에서 특정 값을 빠르게 찾는 문제</li>
+              <li>가능한 최소값이나 최대값을 찾는 문제</li>
+              <li>조건을 만족하는지 검사하는 판단 함수가 필요한 문제</li>
+              <li>입력 크기가 커서 모든 값을 확인하면 시간 초과가 나는 문제</li>
+              <li>정답 후보가 숫자 범위로 표현되는 문제</li>
+            </ul>
+            <div class="problem-links"><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/43238" target="_blank" rel="noreferrer">입국심사</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/43236" target="_blank" rel="noreferrer">징검다리</a></div>
+          </article>
+
+          <article class="type-card">
+            <h3>그래프</h3>
+            <div class="tag-row"><span class="tag">Node</span><span class="tag">Edge</span><span class="tag">연결 관계</span></div>
+            <p>정점과 간선의 관계를 저장하고, 연결 여부나 이동 비용을 계산하는 유형이다.</p>
+            <ul>
+              <li>서로 연결된 노드들을 탐색하는 문제</li>
+              <li>네트워크 개수나 연결 그룹을 구하는 문제</li>
+              <li>간선 정보를 인접 행렬이나 인접 리스트로 바꾸는 문제</li>
+              <li>방향 그래프와 무방향 그래프를 구분해야 하는 문제</li>
+              <li>최단 경로, 최소 비용, 연결 가능성을 판단하는 문제</li>
+            </ul>
+            <div class="problem-links"><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/49189" target="_blank" rel="noreferrer">가장 먼 노드</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/49191" target="_blank" rel="noreferrer">순위</a><a class="problem-link" href="https://school.programmers.co.kr/learn/courses/30/lessons/49190" target="_blank" rel="noreferrer">방의 개수</a></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="how-to-read">
+        <div class="section-heading">
+          <div>
+            <h2>문제를 읽을 때 볼 것</h2>
+            <p>유형을 맞히는 것보다, 문제 조건에서 필요한 자료구조와 알고리즘을 끌어내는 연습이 중요하다.</p>
+          </div>
+        </div>
+        <div class="study-grid">
+          <article class="study-card">
+            <h3>입력 크기</h3>
+            <ul>
+              <li>크기가 작으면 완전탐색을 먼저 의심한다.</li>
+              <li>크기가 크면 정렬, 해시, 이분탐색, DP처럼 계산을 줄이는 방법을 생각한다.</li>
+              <li>2차원 지도라면 좌표 이동과 방문 체크가 필요한지 본다.</li>
+            </ul>
+          </article>
+          <article class="study-card">
+            <h3>반복되는 말</h3>
+            <ul>
+              <li>가장 먼저, 가장 최근, 우선순위 같은 표현은 자료구조 힌트가 된다.</li>
+              <li>최소, 최대, 경우의 수는 DP나 탐욕법으로 이어질 수 있다.</li>
+              <li>연결, 이동, 네트워크, 경로는 DFS/BFS나 그래프 힌트가 된다.</li>
+            </ul>
+          </article>
+          <article class="study-card">
+            <h3>정답 후보</h3>
+            <ul>
+              <li>정답 후보를 모두 만들 수 있으면 완전탐색을 고려한다.</li>
+              <li>정답 후보가 숫자 범위라면 이분탐색을 고려한다.</li>
+              <li>이전 후보의 결과가 다음 후보에 재사용되면 DP를 고려한다.</li>
+            </ul>
+          </article>
+          <article class="study-card">
+            <h3>선택의 영향</h3>
+            <ul>
+              <li>현재 선택이 나중 선택에 영향을 주지 않으면 탐욕법 가능성이 있다.</li>
+              <li>현재 선택이 이후 상태를 바꾸면 탐색이나 DP가 필요할 수 있다.</li>
+              <li>한 번 방문한 상태를 다시 계산한다면 저장할 상태를 찾아야 한다.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="next">
+        <div class="section-heading">
+          <div>
+            <h2>다음 방향</h2>
+            <p>처음에는 모든 유형을 한 번에 잡으려 하지 말고, 구현 기초와 자주 나오는 유형부터 넓혀 가는 편이 좋다.</p>
+          </div>
+        </div>
+        <div class="source-box">
+          <p>
+            기준 유형은 프로그래머스 스쿨의 코딩테스트 고득점 Kit를 참고했다.
+            <a href="https://school.programmers.co.kr/learn/challenges?tab=algorithm_practice_kit" target="_blank" rel="noreferrer">프로그래머스 고득점 Kit 보기</a>
+          </p>
+        </div>
+        <div class="note">
+          추천 순서: 입출력·조건문·반복문 → 배열·문자열 → 2차원 배열·시뮬레이션 → 해시 → 스택·큐 → 정렬 → 완전탐색 → DFS/BFS → 힙 → 이분탐색 → 탐욕법 → DP → 그래프
+        </div>
+      </section>
+
+      <footer class="footer">
+        이 페이지는 알고리즘 유형 설명과 프로그래머스 대표 문제 링크를 연결한 학습 안내 자료다.
+      </footer>
+    </main>
+  </div>
+</body>
+</html>
+
+
+
+
